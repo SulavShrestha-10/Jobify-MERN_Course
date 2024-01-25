@@ -54,7 +54,8 @@ app.get("/api/v1/jobs/:id", (req, res) => {
 	const { id } = req.params;
 	const job = jobs.find((job) => job.id === id);
 	if (!job) {
-		return res.status(404).json({ message: `No job found with id: ${id}!` });
+		throw new Error(`No job found with id: ${id}!`);
+		// return res.status(404).json({ message: `No job found with id: ${id}!` });
 	}
 	res.status(200).json({ job });
 });
@@ -85,6 +86,17 @@ app.delete("/api/v1/jobs/:id", (req, res) => {
 	const newJobs = jobs.filter((job) => job.id !== id);
 	jobs = newJobs;
 	res.status(200).json({ message: "Job Deleted!" });
+});
+
+// * Error Page Route
+app.use("*", (req, res) => {
+	res.status(404).json({ message: "Page Not Found!" });
+});
+
+// * Error Middleware
+app.use((err, req, res, next) => {
+	console.log(err);
+	res.status(500).json({ message: "Something went wrong!" });
 });
 
 const port = process.env.PORT || 4000;
