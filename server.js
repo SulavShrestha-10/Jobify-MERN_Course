@@ -5,6 +5,7 @@ import * as dotenv from "dotenv";
 import jobRouter from "./routes/jobRoutes.js";
 import mongoose from "mongoose";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
+import { validateTest } from "./middlewares/validationMiddleware.js";
 
 dotenv.config();
 
@@ -22,8 +23,9 @@ app.get("/", (req, res) => {
 	res.json({ message: "Hello, world!" });
 });
 
-app.post("/", (req, res) => {
-	res.json({ message: "Data received", data: req.body });
+app.post("/api/v1/test", validateTest, (req, res) => {
+	const { name } = req.body;
+	res.json({ message: `hello ${name}` });
 });
 
 // * Using job routes in the app
