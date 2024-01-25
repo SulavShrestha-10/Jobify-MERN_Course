@@ -19,7 +19,7 @@ const jobSchema = new mongoose.Schema(
 			default: "unknown",
 		},
 	},
-	{ timestamps },
+	{ timestamps: true },
 );
 
 export default mongoose.model("Job", jobSchema);

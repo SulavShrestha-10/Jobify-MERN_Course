@@ -2,9 +2,8 @@ import { Router } from "express";
 import { createJob, deleteJob, getAllJobs, getSingleJob, updateJob } from "../controllers/jobController.js";
 const router = Router();
 
-// ! This is not the final api code for CRUD operations
+
 // * ------------------CRUD Operations for Jobify----------------------
-// * The CRUD operations are currently done using the local data above
 
 // * Adding get and post methods for getting all jobs and creating a new job to same url
 router.route("/").get(getAllJobs).post(createJob);
