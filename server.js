@@ -4,6 +4,7 @@ import morgan from "morgan";
 import * as dotenv from "dotenv";
 import jobRouter from "./routes/jobRoutes.js";
 import mongoose from "mongoose";
+import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
 
 dotenv.config();
 
@@ -34,10 +35,7 @@ app.use("*", (req, res) => {
 });
 
 // * Error Middleware
-app.use((err, req, res, next) => {
-	console.log(err);
-	res.status(500).json({ message: "Something went wrong!" });
-});
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 4000;
 
