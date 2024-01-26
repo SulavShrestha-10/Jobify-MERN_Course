@@ -3,9 +3,9 @@ import express from "express";
 import morgan from "morgan";
 import * as dotenv from "dotenv";
 import jobRouter from "./routes/jobRoutes.js";
+import authRouter from "./routes/authRoutes.js";
 import mongoose from "mongoose";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
-
 
 dotenv.config();
 
@@ -23,10 +23,9 @@ app.get("/", (req, res) => {
 	res.json({ message: "Hello, world!" });
 });
 
-
 // * Using job routes in the app
 app.use("/api/v1/jobs", jobRouter);
-
+app.use("/api/v1/auth", authRouter);
 // * Error Page Route
 app.use("*", (req, res) => {
 	res.status(404).json({ message: "Page Not Found!" });
