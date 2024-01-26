@@ -27,6 +27,11 @@ app.get("/", (req, res) => {
 	res.json({ message: "Hello, world!" });
 });
 
+app.get("/api/v1/test", (req, res) => {
+	res.json({ msg: "test route" });
+});
+
+
 // * Using job routes in the app
 app.use("/api/v1/jobs", authenticateUser, jobRouter);
 app.use("/api/v1/users", authenticateUser, userRouter);
