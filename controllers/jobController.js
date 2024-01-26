@@ -3,7 +3,8 @@ import Job from "../models/JobModel.js";
 
 // * Job Route Controllers
 export const getAllJobs = async (req, res) => {
-	const jobs = await Job.find({});
+	const { userId } = req.user;
+	const jobs = await Job.find({ createdBy: userId });
 	res.status(StatusCodes.OK).json({ jobs });
 };
 
@@ -14,8 +15,8 @@ export const getSingleJob = async (req, res) => {
 };
 
 export const createJob = async (req, res) => {
-	const { company, position } = req.body;
-	const job = await Job.create({ company, position });
+	req.body.createdBy = req.user.userId;
+	const job = await Job.create(req.body);
 	res.status(StatusCodes.CREATED).json({ job });
 };
 

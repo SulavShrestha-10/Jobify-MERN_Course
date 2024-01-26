@@ -4,6 +4,7 @@ import morgan from "morgan";
 import * as dotenv from "dotenv";
 import jobRouter from "./routes/jobRoutes.js";
 import authRouter from "./routes/authRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 import mongoose from "mongoose";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
 import { authenticateUser } from "./middlewares/authMiddleware.js";
@@ -28,8 +29,8 @@ app.get("/", (req, res) => {
 
 // * Using job routes in the app
 app.use("/api/v1/jobs", authenticateUser, jobRouter);
+app.use("/api/v1/users", authenticateUser, userRouter);
 app.use("/api/v1/auth", authRouter);
-
 
 // * Error Page Route
 app.use("*", (req, res) => {

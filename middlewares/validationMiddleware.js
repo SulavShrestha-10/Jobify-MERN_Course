@@ -1,5 +1,5 @@
 import { body, validationResult, param } from "express-validator";
-import { BadRequestError, NotFoundError } from "../errors/customErrors.js";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "../errors/customErrors.js";
 import { JOB_STATUS, JOB_TYPE, USER_TYPE } from "../utils/constants.js";
 import mongoose from "mongoose";
 import Job from "../models/JobModel.js";
@@ -15,6 +15,9 @@ const withValidationErrors = (validateValues) => {
 				const errMessages = errors.array().map((err) => err.msg);
 				if (errMessages[0].startsWith("No job")) {
 					throw new NotFoundError(errMessages);
+				}
+				if (errMessages[0].startsWith("Not authorized")) {
+					throw new UnauthorizedError(errMessages);
 				}
 				throw new BadRequestError(errMessages);
 			}
@@ -33,16 +36,14 @@ export const validateJobInput = withValidationErrors([
 ]);
 
 export const validateIdParam = withValidationErrors([
-	param("id").custom(async (val) => {
+	param("id").custom(async (val, { req }) => {
 		const isValidId = mongoose.Types.ObjectId.isValid(val);
-		if (!isValidId) {
-			throw new BadRequestError("Invalid MongoDB ID!");
-		}
-
+		if (!isValidId) throw new BadRequestError("Invalid MongoDB ID!");
 		const job = await Job.findById(val);
-		if (!job) {
-			throw new NotFoundError(`No job found with id ${val}!`);
-		}
+		if (!job) throw new NotFoundError(`No job found with id ${val}!`);
+		const isAdmin = req.user.role === "admin";
+		const isOwner = req.user.userId === job.createdBy.toString();
+		if (!isAdmin && !isOwner) throw new UnauthorizedError("Not authorized to access the page!");
 	}),
 ]);
 
@@ -73,4 +74,21 @@ export const validateRegisterInput = withValidationErrors([
 export const validateLoginInput = withValidationErrors([
 	body("email").notEmpty().withMessage("Email is required!").isEmail().withMessage("Invalid email format!"),
 	body("password").notEmpty().withMessage("Password is required!"),
+]);
+
+export const validateUpdateUserInput = withValidationErrors([
+	body("name").notEmpty().withMessage("Name is required!"),
+	body("lastName").notEmpty().withMessage("Last name is required!"),
+	body("email")
+		.notEmpty()
+		.withMessage("Email is required!")
+		.isEmail()
+		.withMessage("Invalid email format!")
+		.custom(async (email, { req }) => {
+			const user = await User.findOne({ email });
+			if (user && user._id.toString() !== req.user.userId) {
+				throw new BadRequestError("Email already exists!");
+			}
+		}),
+	body("location").notEmpty().withMessage("Location is required!"),
 ]);
