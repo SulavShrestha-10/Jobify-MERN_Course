@@ -6,6 +6,7 @@ import jobRouter from "./routes/jobRoutes.js";
 import mongoose from "mongoose";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
 
+
 dotenv.config();
 
 const app = express();
@@ -22,9 +23,6 @@ app.get("/", (req, res) => {
 	res.json({ message: "Hello, world!" });
 });
 
-app.post("/", (req, res) => {
-	res.json({ message: "Data received", data: req.body });
-});
 
 // * Using job routes in the app
 app.use("/api/v1/jobs", jobRouter);
