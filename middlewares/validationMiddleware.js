@@ -69,3 +69,8 @@ export const validateRegisterInput = withValidationErrors([
 	body("location").notEmpty().withMessage("Location is required!"),
 	body("role").isIn(Object.values(USER_TYPE)).withMessage("Invalid role type"),
 ]);
+
+export const validateLoginInput = withValidationErrors([
+	body("email").notEmpty().withMessage("Email is required!").isEmail().withMessage("Invalid email format!"),
+	body("password").notEmpty().withMessage("Password is required!"),
+]);
