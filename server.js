@@ -6,7 +6,8 @@ import jobRouter from "./routes/jobRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import mongoose from "mongoose";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
-
+import { authenticateUser } from "./middlewares/authMiddleware.js";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 const app = express();
@@ -17,6 +18,8 @@ app.use(express.json());
 if (process.env.NODE_ENV === "development") {
 	app.use(morgan("dev"));
 }
+// *  For parsing cookies
+app.use(cookieParser());
 
 // * App routes
 app.get("/", (req, res) => {
@@ -24,8 +27,10 @@ app.get("/", (req, res) => {
 });
 
 // * Using job routes in the app
-app.use("/api/v1/jobs", jobRouter);
+app.use("/api/v1/jobs", authenticateUser, jobRouter);
 app.use("/api/v1/auth", authRouter);
+
+
 // * Error Page Route
 app.use("*", (req, res) => {
 	res.status(404).json({ message: "Page Not Found!" });
