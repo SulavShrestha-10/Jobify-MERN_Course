@@ -1,6 +1,5 @@
-import { NotFoundError } from "../errors/customErrors.js";
-import Job from "../models/JobModel.js";
 import { StatusCodes } from "http-status-codes";
+import Job from "../models/JobModel.js";
 
 // * Job Route Controllers
 export const getAllJobs = async (req, res) => {
