@@ -1,5 +1,6 @@
 import { body, validationResult } from "express-validator";
 import { BadRequestError } from "../errors/customErrors.js";
+import { JOB_STATUS, JOB_TYPE } from "../utils/constants.js";
 
 const withValidationErrors = (validateValues) => {
 	return [
@@ -15,10 +16,10 @@ const withValidationErrors = (validateValues) => {
 	];
 };
 
-export const validateTest = withValidationErrors([
-	body("name")
-		.notEmpty()
-		.withMessage("name is required")
-		.isLength({ min: 5 })
-		.withMessage("Name length must be at least 5"),
+export const validateJobInput = withValidationErrors([
+	body("company").notEmpty().withMessage("Company name is required!"),
+	body("position").notEmpty().withMessage("Position is required!"),
+	body("jobLocation").notEmpty().withMessage("Job location is required!"),
+	body("jobStatus").isIn(Object.values(JOB_STATUS)).withMessage("Invalid status value"),
+	body("jobType").isIn(Object.values(JOB_TYPE)).withMessage("Invalid type value"),
 ]);
