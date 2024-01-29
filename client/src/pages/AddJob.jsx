@@ -7,6 +7,19 @@ import { Form, useNavigation, redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import customFetch from "../utils/customFetch";
 
+export const addJob = async ({ request }) => {
+	const formData = await request.formData();
+	const data = Object.fromEntries(formData);
+	try {
+		await customFetch.post("/jobs", data);
+		toast.success("New job added successfully!");
+		return redirect("all-jobs");
+	} catch (error) {
+		toast.error(error?.response?.data?.message);
+		return error;
+	}
+};
+
 const AddJob = () => {
 	const { user } = useOutletContext();
 	const navigation = useNavigation();
