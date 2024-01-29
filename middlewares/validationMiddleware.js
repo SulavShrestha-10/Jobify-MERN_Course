@@ -68,7 +68,6 @@ export const validateRegisterInput = withValidationErrors([
 		.isLength({ min: 8 })
 		.withMessage("Password must be at least 8 characters long!"),
 	body("location").notEmpty().withMessage("Location is required!"),
-	body("role").isIn(Object.values(USER_TYPE)).withMessage("Invalid role type"),
 ]);
 
 export const validateLoginInput = withValidationErrors([

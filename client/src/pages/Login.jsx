@@ -11,7 +11,7 @@ const Login = () => {
 				<FormRow type="email" name="email" defaultValue="ram@gmail.com" />
 				<FormRow type="password" name="password" defaultValue="Test@123" />
 				<button className="btn btn-block" type="submit">
-					submit
+					Login
 				</button>
 				<button className="btn btn-block" type="button">
 					explore the app
