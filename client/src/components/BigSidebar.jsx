@@ -6,12 +6,9 @@ import Logo from "./Logo";
 
 const BigSidebar = () => {
 	const { showSidebar, toggleSidebar } = useDashboardContext();
-	useEffect(() => {
-		toggleSidebar(true);
-	}, []);
 	return (
 		<Wrapper>
-			<div className={showSidebar ? "sidebar-container show-sidebar" : "sidebar-container"}>
+			<div className={!showSidebar ? "sidebar-container show-sidebar" : "sidebar-container"}>
 				<div className="content">
 					<header>
 						<Logo />

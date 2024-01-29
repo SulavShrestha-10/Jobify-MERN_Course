@@ -13,7 +13,9 @@ import {
 	Admin,
 	Profile,
 } from "./pages";
-import { action } from "./pages/Register";
+import { register } from "./pages/Register";
+import { login } from "./pages/Login";
+import { loader } from "./pages/DashboardLayout";
 
 const checkDefaultTheme = () => {
 	const isDarkTheme = localStorage.getItem("dark") === "true";
@@ -36,15 +38,17 @@ const router = createBrowserRouter([
 			{
 				path: "register",
 				element: <Register />,
-				action: action,
+				action: register,
 			},
 			{
 				path: "login",
 				element: <Login />,
+				action: login,
 			},
 			{
 				path: "dashboard",
 				element: <DashboardLayout isDarkThemeEnabled={isDarkThemeEnabled} />,
+				loader: loader,
 				children: [
 					{
 						index: true,
