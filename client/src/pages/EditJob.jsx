@@ -1,10 +1,9 @@
 import React from "react";
-import { FormRow, FormRowSelect } from "../components";
-import Wrapper from "../assets/wrappers/DashboardFormPage";
-import { useLoaderData } from "react-router-dom";
-import { JOB_STATUS, JOB_TYPE } from "../../../utils/constants";
-import { Form, useNavigation, redirect } from "react-router-dom";
+import { Form, redirect, useLoaderData } from "react-router-dom";
 import { toast } from "react-toastify";
+import { JOB_STATUS, JOB_TYPE } from "../../../utils/constants";
+import Wrapper from "../assets/wrappers/DashboardFormPage";
+import { FormRow, FormRowSelect, SubmitBtn } from "../components";
 import customFetch from "../utils/customFetch";
 
 export const loadJob = async ({ params }) => {
@@ -25,15 +24,12 @@ export const editJob = async ({ request, params }) => {
 		toast.success("Job edited successfully");
 		return redirect("/dashboard/all-jobs");
 	} catch (error) {
-		toast.error(error.response.data.msg);
+		toast.error(error.response.data.message);
 		return error;
 	}
 };
 const EditJob = () => {
 	const { job } = useLoaderData();
-	console.log(job);
-	const navigation = useNavigation();
-	const isSubmitting = navigation.state === "submitting";
 
 	return (
 		<Wrapper>
@@ -56,9 +52,7 @@ const EditJob = () => {
 						defaultValue={job?.jobType}
 						list={Object.values(JOB_TYPE)}
 					/>
-					<button type="submit" className="btn btn-block form-btn " disabled={isSubmitting}>
-						{isSubmitting ? "submitting..." : "submit"}
-					</button>
+					<SubmitBtn formBtn text="Edit Job" />
 				</div>
 			</Form>
 		</Wrapper>

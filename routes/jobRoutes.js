@@ -1,17 +1,18 @@
 import { Router } from "express";
 import { createJob, deleteJob, getAllJobs, getSingleJob, updateJob } from "../controllers/jobController.js";
 import { validateIdParam, validateJobInput } from "../middlewares/validationMiddleware.js";
+import { checkTestUser } from "../middlewares/authMiddleware.js";
 const router = Router();
 
 // * Adding get and post methods for getting all jobs and creating a new job to same url
-router.route("/").get(getAllJobs).post(validateJobInput, createJob);
+router.route("/").get(getAllJobs).post(checkTestUser, validateJobInput, createJob);
 
 // * Adding get,delete and patch methods for getting single job,updating a job and deleting a job to same url
 router
 	.route("/:id")
 	.get(validateIdParam, getSingleJob)
-	.patch(validateJobInput, validateIdParam, updateJob)
-	.delete(validateIdParam, deleteJob);
+	.patch(checkTestUser, validateJobInput, validateIdParam, updateJob)
+	.delete(checkTestUser, validateIdParam, deleteJob);
 
 // * Get all jobs
 // router.get("/", getAllJobs);

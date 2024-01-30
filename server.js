@@ -2,10 +2,14 @@ import "express-async-errors";
 import express from "express";
 import morgan from "morgan";
 import * as dotenv from "dotenv";
+import mongoose from "mongoose";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+import cloudinary from "cloudinary";
+
 import jobRouter from "./routes/jobRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import userRouter from "./routes/userRoutes.js";
-import mongoose from "mongoose";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
 import { authenticateUser } from "./middlewares/authMiddleware.js";
 import cookieParser from "cookie-parser";
@@ -13,12 +17,22 @@ dotenv.config();
 
 const app = express();
 
+cloudinary.config({
+	cloud_name: process.env.CLOUD_NAME,
+	api_key: process.env.CLOUD_API_KEY,
+	api_secret: process.env.CLOUD_API_SECRET,
+});
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 // * Middlewares
+
 // * For accepting json data
 app.use(express.json());
 if (process.env.NODE_ENV === "development") {
 	app.use(morgan("dev"));
 }
+app.use(express.static(path.resolve(__dirname, "./public")));
 // *  For parsing cookies
 app.use(cookieParser());
 
@@ -30,7 +44,6 @@ app.get("/", (req, res) => {
 app.get("/api/v1/test", (req, res) => {
 	res.json({ msg: "test route" });
 });
-
 
 // * Using job routes in the app
 app.use("/api/v1/jobs", authenticateUser, jobRouter);
