@@ -12,10 +12,15 @@ import {
 	AddJob,
 	Admin,
 	Profile,
+	EditJob,
 } from "./pages";
 import { register } from "./pages/Register";
 import { login } from "./pages/Login";
 import { loader } from "./pages/DashboardLayout";
+import { addJob } from "./pages/AddJob";
+import { getJobs } from "./pages/AllJobs";
+import { editJob, loadJob } from "./pages/EditJob";
+import { deleteJob } from "./pages/DeleteJob";
 
 const checkDefaultTheme = () => {
 	const isDarkTheme = localStorage.getItem("dark") === "true";
@@ -53,6 +58,7 @@ const router = createBrowserRouter([
 					{
 						index: true,
 						element: <AddJob />,
+						action: addJob,
 					},
 					{
 						path: "stats",
@@ -61,11 +67,19 @@ const router = createBrowserRouter([
 					{
 						path: "all-jobs",
 						element: <AllJobs />,
+						loader: getJobs,
 					},
 					{
 						path: "admin",
 						element: <Admin />,
 					},
+					{
+						path: "edit-job/:id",
+						element: <EditJob />,
+						loader: loadJob,
+						action: editJob,
+					},
+					{ path: "delete-job/:id", action: deleteJob },
 					{
 						path: "profile",
 						element: <Profile />,
