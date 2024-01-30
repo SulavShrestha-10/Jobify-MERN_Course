@@ -21,6 +21,7 @@ import { addJob } from "./pages/AddJob";
 import { getJobs } from "./pages/AllJobs";
 import { editJob, loadJob } from "./pages/EditJob";
 import { deleteJob } from "./pages/DeleteJob";
+import { getAppStats } from "./pages/Admin";
 
 const checkDefaultTheme = () => {
 	const isDarkTheme = localStorage.getItem("dark") === "true";
@@ -72,6 +73,7 @@ const router = createBrowserRouter([
 					{
 						path: "admin",
 						element: <Admin />,
+						loader: getAppStats,
 					},
 					{
 						path: "edit-job/:id",
