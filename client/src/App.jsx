@@ -24,6 +24,9 @@ import { deleteJob } from "./pages/DeleteJob";
 import { getAppStats } from "./pages/Admin";
 import { updateUser } from "./pages/Profile";
 import { getStats } from "./pages/Stats";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ErrorElement } from "./components";
 
 const checkDefaultTheme = () => {
 	const isDarkTheme = localStorage.getItem("dark") === "true";
@@ -31,6 +34,13 @@ const checkDefaultTheme = () => {
 	return isDarkTheme;
 };
 
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			staleTime: 1000 * 60 * 5,
+		},
+	},
+});
 const isDarkThemeEnabled = checkDefaultTheme();
 
 const router = createBrowserRouter([
@@ -51,27 +61,29 @@ const router = createBrowserRouter([
 			{
 				path: "login",
 				element: <Login />,
-				action: login,
+				action: login(queryClient),
 			},
 			{
 				path: "dashboard",
 				element: <DashboardLayout isDarkThemeEnabled={isDarkThemeEnabled} />,
-				loader: loader,
+				loader: loader(queryClient),
 				children: [
 					{
 						index: true,
 						element: <AddJob />,
-						action: addJob,
+						action: addJob(queryClient),
 					},
 					{
 						path: "stats",
 						element: <Stats />,
-						loader: getStats,
+						loader: getStats(queryClient),
+						errorElement: <ErrorElement />,
 					},
 					{
 						path: "all-jobs",
 						element: <AllJobs />,
-						loader: getJobs,
+						loader: getJobs(queryClient),
+						errorElement: <ErrorElement />,
 					},
 					{
 						path: "admin",
@@ -81,14 +93,14 @@ const router = createBrowserRouter([
 					{
 						path: "edit-job/:id",
 						element: <EditJob />,
-						loader: loadJob,
-						action: editJob,
+						loader: loadJob(queryClient),
+						action: editJob(queryClient),
 					},
-					{ path: "delete-job/:id", action: deleteJob },
+					{ path: "delete-job/:id", action: deleteJob(queryClient) },
 					{
 						path: "profile",
 						element: <Profile />,
-						action: updateUser,
+						action: updateUser(queryClient),
 					},
 				],
 			},
@@ -96,7 +108,12 @@ const router = createBrowserRouter([
 	},
 ]);
 const App = () => {
-	return <RouterProvider router={router} />;
+	return (
+		<QueryClientProvider client={queryClient}>
+			<RouterProvider router={router} />
+			<ReactQueryDevtools initialIsOpen={false} />
+		</QueryClientProvider>
+	);
 };
 
 export default App;

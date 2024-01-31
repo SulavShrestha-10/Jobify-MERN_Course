@@ -6,7 +6,8 @@ import mongoose from "mongoose";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import cloudinary from "cloudinary";
-
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
 import jobRouter from "./routes/jobRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import userRouter from "./routes/userRoutes.js";
@@ -26,7 +27,8 @@ cloudinary.config({
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // * Middlewares
-
+app.use(helmet());
+app.use(mongoSanitize());
 // * For accepting json data
 app.use(express.json());
 if (process.env.NODE_ENV === "development") {
