@@ -23,6 +23,7 @@ import { editJob, loadJob } from "./pages/EditJob";
 import { deleteJob } from "./pages/DeleteJob";
 import { getAppStats } from "./pages/Admin";
 import { updateUser } from "./pages/Profile";
+import { getStats } from "./pages/Stats";
 
 const checkDefaultTheme = () => {
 	const isDarkTheme = localStorage.getItem("dark") === "true";
@@ -65,6 +66,7 @@ const router = createBrowserRouter([
 					{
 						path: "stats",
 						element: <Stats />,
+						loader: getStats,
 					},
 					{
 						path: "all-jobs",
